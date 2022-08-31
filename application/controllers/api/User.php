@@ -208,6 +208,7 @@ class User extends RestController
         $password = $this->post('password');
         $gender = $this->post('gender');
         $birthday = $this->post('birthday');
+        $role = $this->post('role');
 
         if($password != null || $password != ''){
             $data = [
@@ -219,21 +220,36 @@ class User extends RestController
                 'email' => $email,
                 'gender' => $gender,
                 'birthday' => $birthday,
+                'role' => $role,
                 'password' => md5($password),
                 'updated' => date('Y-m-d H:i:s')
             ];
         }else{
-            $data = [
-                'username' => $username,
-                'nama' => $nama,
-                'pekerjaan' => $pekerjaan,
-                'no_telp' => $no_telp,
-                'alamat' => $alamat,
-                'email' => $email,
-                'gender' => $gender,
-                'birthday' => $birthday,
-                'updated' => date('Y-m-d H:i:s')
-            ];
+            if($gender == null && $birthday == null){
+                $data = [
+                    'username' => $username,
+                    'nama' => $nama,
+                    'pekerjaan' => $pekerjaan,
+                    'no_telp' => $no_telp,
+                    'alamat' => $alamat,
+                    'email' => $email,
+                    'role' => $role,
+                    'updated' => date('Y-m-d H:i:s')
+                ];
+            }else{
+                $data = [
+                    'username' => $username,
+                    'nama' => $nama,
+                    'pekerjaan' => $pekerjaan,
+                    'no_telp' => $no_telp,
+                    'alamat' => $alamat,
+                    'email' => $email,
+                    'gender' => $gender,
+                    'birthday' => $birthday,
+                    'role' => $role,
+                    'updated' => date('Y-m-d H:i:s')
+                ];
+            }
         }
 
         //cek username terlebih dahulu
@@ -394,6 +410,92 @@ class User extends RestController
             $this->response([
                 'status' => false,
                 'message' => 'Email Tidak Ditemukan'
+            ],404);
+        }
+    }
+
+    public function location_post(){
+        $id_user = $this->post('id_user');
+        $role = $this->post('role');
+        $latitude = $this->post('latitude');
+        $longitude = $this->post('longitude');
+
+        $data = [
+            'id_user' => $id_user,
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'role' => $role,
+            'updated' => date('Y-m-d H:i:s'),
+        ];
+
+        if($id_user != null){
+            $get_user_location = $this->db->get_where('user_location', ['id_user' => $id_user])->result_array();
+            if($get_user_location){
+                //update data
+                $this->db->where('id_user', $id_user);
+                $this->db->update('user_location', $data);
+                if($this->db->affected_rows()){
+                    $this->response([
+                        'status' => true,
+                        'message' => 'Location Updated'
+                    ],200);
+                } else {
+                    $this->response([
+                        'status' => false,
+                        'message' => 'Failed Update Location'
+                    ],404);
+                }
+            }else{
+                //tambah data
+                $insert = $this->db->insert('user_location', $data);
+                if($insert){
+                    $this->response([
+                        'status' => true,
+                        'message' => 'Location Added'
+                    ],200);
+                } else {
+                    $this->response([
+                        'status' => false,
+                        'message' => 'Failed Added Location'
+                    ],404);
+                }
+            }
+        }else{
+            $this->response([
+                'status' => false,
+                'message' => 'id_user is null'
+            ],404);
+        }
+    }
+
+    public function penyuluh_location_get(){
+        $get_penyuluh = $this->db->get_where('user_location', ['role' => 'Penyuluh'])->result_array();
+        if($get_penyuluh){
+            foreach ($get_penyuluh as $key => $value) {
+                $get_users = $this->db->get_where('users', ['id_user' => $value['id_user']])->result_array();
+                if($get_users){
+                    $nama_user = $get_users[0]['nama'];
+                }else{
+                    $nama_user = null;
+                }
+                $dataArray[] = [
+                    'id_user' => $value['id_user'],
+                    'role' => 'Penyuluh',
+                    'nama' => $nama_user,
+                    'latitude' => $value['latitude'],
+                    'longitude' => $value['longitude'],
+                    'status' => $value['status'],
+                ];
+            }
+            $this->response([
+                'status' => true,
+                'message' => 'success',
+                'result' => $dataArray
+            ],200);
+        } else {
+            $this->response([
+                'status' => false,
+                'message' => 'failed',
             ],404);
         }
     }

@@ -91,7 +91,7 @@ class Cek_tanah extends RestController
     }
 
     public function tes_alat_get(){
-        $id_device = $this->get('id_device');
+        $id_device = 'SENSOR001';
         $get_cek_tanah = $this->db->get_where('cek_tanah', ['id_device' => $id_device])->result_array();
         if($get_cek_tanah){
             $this->response([

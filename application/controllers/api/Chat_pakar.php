@@ -329,4 +329,21 @@ class Chat_pakar extends RestController
             ],404);
         }
     }
+
+    public function hapus_room_get(){
+        $pengirim = $this->get('pengirim');
+        $this->db->where('pengirim', $pengirim);
+        $this->db->delete('chat_pakar');
+        if($this->db->affected_rows()){
+            $this->response([
+                'status' => true,
+                'message' => 'success',
+            ],200);
+        }else{
+            $this->response([
+                'status' => false,
+                'message' => 'failed',
+            ],404);
+        }
+    }
 }
