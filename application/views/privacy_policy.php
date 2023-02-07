@@ -8,9 +8,9 @@
     </head>
     <body>
     <strong>Privacy Policy</strong> <p>
-                  Alices Technology built the Bertani app as
+                  Balai Besar Pelatihan Pertanian Ketindan built the Bertani app as
                   a Free app. This SERVICE is provided by
-                  Alices Technology at no cost and is intended for use as
+                  Balai Besar Pelatihan Pertanian Ketindan at no cost and is intended for use as
                   is.
                 </p> <p>
                   This page is used to inform visitors regarding our

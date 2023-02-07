@@ -17,9 +17,9 @@
                   to translate the app into other languages or make derivative
                   versions. The app itself, and all the trademarks, copyright,
                   database rights, and other intellectual property rights related
-                  to it, still belong to Alices Technology.
+                  to it, still belong to Balai Besar Pelatihan Pertanian Ketindan.
                 </p> <p>
-                  Alices Technology is committed to ensuring that the app is
+                  Balai Besar Pelatihan Pertanian Ketindan is committed to ensuring that the app is
                   as useful and efficient as possible. For that reason, we
                   reserve the right to make changes to the app or to charge for
                   its services, at any time and for any reason. We will never
@@ -44,10 +44,10 @@
                     providers used by the app
                   </p> <ul><li><a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">Google Play Services</a></li><!----><li><a href="https://firebase.google.com/terms/analytics" target="_blank" rel="noopener noreferrer">Google Analytics for Firebase</a></li><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----></ul></div> <p>
                   You should be aware that there are certain things that
-                  Alices Technology will not take responsibility for. Certain
+                  Balai Besar Pelatihan Pertanian Ketindan will not take responsibility for. Certain
                   functions of the app will require the app to have an active
                   internet connection. The connection can be Wi-Fi or provided
-                  by your mobile network provider, but Alices Technology
+                  by your mobile network provider, but Balai Besar Pelatihan Pertanian Ketindan
                   cannot take responsibility for the app not working at full
                   functionality if you don’t have access to Wi-Fi, and you don’t
                   have any of your data allowance left.
@@ -65,18 +65,18 @@
                   using the app, please be aware that we assume that you have
                   received permission from the bill payer for using the app.
                 </p> <p>
-                  Along the same lines, Alices Technology cannot always take
+                  Along the same lines, Balai Besar Pelatihan Pertanian Ketindan cannot always take
                   responsibility for the way you use the app i.e. You need to
                   make sure that your device stays charged – if it runs out of
                   battery and you can’t turn it on to avail the Service,
-                  Alices Technology cannot accept responsibility.
+                  Balai Besar Pelatihan Pertanian Ketindan cannot accept responsibility.
                 </p> <p>
-                  With respect to Alices Technology’s responsibility for your
+                  With respect to Balai Besar Pelatihan Pertanian Ketindan’s responsibility for your
                   use of the app, when you’re using the app, it’s important to
                   bear in mind that although we endeavor to ensure that it is
                   updated and correct at all times, we do rely on third parties
                   to provide information to us so that we can make it available
-                  to you. Alices Technology accepts no liability for any
+                  to you. Balai Besar Pelatihan Pertanian Ketindan accepts no liability for any
                   loss, direct or indirect, you experience as a result of
                   relying wholly on this functionality of the app.
                 </p> <p>
@@ -85,7 +85,7 @@
                   system(and for any additional systems we
                   decide to extend the availability of the app to) may change,
                   and you’ll need to download the updates if you want to keep
-                  using the app. Alices Technology does not promise that it
+                  using the app. Balai Besar Pelatihan Pertanian Ketindan does not promise that it
                   will always update the app so that it is relevant to you
                   and/or works with the Android version that you have
                   installed on your device. However, you promise to always

@@ -14,20 +14,37 @@ class User extends RestController
 
     public function login_post()
     {
-        $username = $this->post('username');
+        $email = $this->post('email');
         $password = $this->post('password');
 
         $data = [
-            'username' => $username,
+            'email' => $email,
             'password' => md5($password),
         ];
-        $this->db->select('id_user, username, nama, pekerjaan, role, alamat, no_telp, email, photo, gender, birthday, token');
+
         $get_users = $this->db->get_where('users', $data)->result_array();
         if ($get_users) {
+            foreach ($get_users as $key => $value) {
+                $dataResponse[] = [
+                    'id_user' => $value['id_user'],
+                    'nama' => $value['nama'],
+                    'pekerjaan' => $value['pekerjaan'],
+                    'role' => $value['role'],
+                    'alamat' => $value['alamat'],
+                    'no_telp' => $value['no_telp'],
+                    'email' => $value['email'],
+                    'photo' => $value['photo'],
+                    'gender' => $value['gender'],
+                    'birthday' => $value['birthday'],
+                    'token' => $value['token'],
+                    'pengalaman' => $value['pengalaman'],
+                    'rating' => $value['rating']/20,
+                ];
+            }
             $this->response([
                 'status' => true,
                 'message' => 'success',
-                'result' => $get_users
+                'result' => $dataResponse
             ], 200);
         } else {
             $this->response([
@@ -40,66 +57,47 @@ class User extends RestController
 
     public function register_post(){
         $nama = $this->post('nama');
-        $username = $this->post('username');
-        $email = $this->post('email');
-        $gender = $this->post('gender');
-        $birthday = $this->post('birthday');
-        $pekerjaan = $this->post('pekerjaan');
         $no_telp = $this->post('no_telp');
-        $alamat = $this->post('alamat');
+        $email = $this->post('email');
         $role = $this->post('role');
         $password = $this->post('password');
 
         $data = [
          'nama' => $nama,
-         'username' => $username,
-         'email' => $email,
-         'gender' => $gender,
-         'birthday' => $birthday,
-         'pekerjaan' => $pekerjaan,
          'no_telp' => $no_telp,
-         'alamat' => $alamat,
+         'email' => $email,
          'role' => $role,
          'password' => md5($password),
         ];
 
-        //cek username
-        $get_username = $this->db->get_where('users', ['username' => $username])->result_array();
-        if(!$get_username){
-            //cek email
-            $get_email = $this->db->get_where('users', ['email' => $email])->result_array();
-            if(!$get_email){
-                //cek no handphone
-                $get_no_telp = $this->db->get_where('users', ['no_telp' => $no_telp])->result_array();
-                if(!$get_no_telp){
-                    $insert_user = $this->db->insert('users', $data);
-                    if($insert_user){
-                        $this->response([
-                            'status' => true,
-                            'message' => 'Berhasil Mendaftarkan Akun'
-                        ],200);
-                    }else{
-                        $this->response([
-                            'status' => false,
-                            'message' => 'Gagal Mendaftarkan Akun'
-                        ],404);
-                    }
+        //cek email
+        $get_email = $this->db->get_where('users', ['email' => $email])->result_array();
+        if(!$get_email){
+            //cek no handphone
+            $get_no_telp = $this->db->get_where('users', ['no_telp' => $no_telp])->result_array();
+            if(!$get_no_telp){
+                $insert_user = $this->db->insert('users', $data);
+                if($insert_user){
+                    $this->response([
+                        'status' => true,
+                        'message' => 'Berhasil Mendaftarkan Akun'
+                    ],200);
                 }else{
                     $this->response([
                         'status' => false,
-                        'message' => 'Nomor Handphone Sudah Terdaftar'
+                        'message' => 'Gagal Mendaftarkan Akun'
                     ],404);
                 }
             }else{
                 $this->response([
                     'status' => false,
-                    'message' => 'Email Sudah Terdaftar'
+                    'message' => 'Nomor Handphone Sudah Terdaftar'
                 ],404);
             }
         }else{
             $this->response([
                 'status' => false,
-                'message' => 'Username Sudah Terdaftar, Silahkan Menggunakan Username Lainnya'
+                'message' => 'Email Sudah Terdaftar'
             ],404);
         }
     }
@@ -199,111 +197,112 @@ class User extends RestController
     public function edit_post()
     {
         $id_user = $this->post('id_user');
-        $username = $this->post('username');
         $nama = $this->post('nama');
         $pekerjaan = $this->post('pekerjaan');
+        $pengalaman = $this->post('pengalaman');
         $no_telp = $this->post('no_telp');
-        $alamat = $this->post('alamat');
         $email = $this->post('email');
         $password = $this->post('password');
-        $gender = $this->post('gender');
-        $birthday = $this->post('birthday');
-        $role = $this->post('role');
 
-        if($password != null || $password != ''){
+        if($password){
             $data = [
-                'username' => $username,
                 'nama' => $nama,
                 'pekerjaan' => $pekerjaan,
+                'pengalaman' => $pengalaman,
                 'no_telp' => $no_telp,
-                'alamat' => $alamat,
                 'email' => $email,
-                'gender' => $gender,
-                'birthday' => $birthday,
-                'role' => $role,
                 'password' => md5($password),
                 'updated' => date('Y-m-d H:i:s')
             ];
         }else{
-            if($gender == null && $birthday == null){
-                $data = [
-                    'username' => $username,
-                    'nama' => $nama,
-                    'pekerjaan' => $pekerjaan,
-                    'no_telp' => $no_telp,
-                    'alamat' => $alamat,
-                    'email' => $email,
-                    'role' => $role,
-                    'updated' => date('Y-m-d H:i:s')
-                ];
-            }else{
-                $data = [
-                    'username' => $username,
-                    'nama' => $nama,
-                    'pekerjaan' => $pekerjaan,
-                    'no_telp' => $no_telp,
-                    'alamat' => $alamat,
-                    'email' => $email,
-                    'gender' => $gender,
-                    'birthday' => $birthday,
-                    'role' => $role,
-                    'updated' => date('Y-m-d H:i:s')
-                ];
-            }
+            $data = [
+                'nama' => $nama,
+                'pekerjaan' => $pekerjaan,
+                'pengalaman' => $pengalaman,
+                'no_telp' => $no_telp,
+                'email' => $email,
+                'updated' => date('Y-m-d H:i:s')
+            ];
         }
 
-        //cek username terlebih dahulu
-        $get_users = $this->db->get_where('users', ['id_user' => $id_user])->result_array();
-
-        if($get_users){
-            $username_lama = $get_users[0]['username'];
-        }else{
-            $username_lama = null;
-        }
-
-        if($username_lama == $username){
-            $this->db->where('id_user', $id_user);
-            $this->db->update('users', $data);
-    
-            if ($this->db->affected_rows()) {
-                $this->db->select('id_user, username, nama, pekerjaan, role, alamat, no_telp, email, photo, gender, birthday, token');
-                $get_users = $this->db->get_where('users', ['id_user' => $id_user])->result_array();
-                $this->response([
-                    'status' => true,
-                    'message' => 'success',
-                    'result' => $get_users,
-                ], 200);
-            } else {
-                $this->response([
-                    'status' => false,
-                    'message' => 'failed',
-                ], 404);
-            }
-        }else{
-            $get_users_scan_username = $this->db->get_where('users', ['username' => $username])->result_array();
-            if($get_users_scan_username){
-                $this->response([
-                    'status' => false,
-                    'message' => 'Username Tidak Tersedia',
-                ], 404);
-            }else{
+        $cek_email = $this->db->get_where('users', ['email' => $email])->result_array();
+        if($cek_email){
+            if($id_user == $cek_email[0]['id_user']){
+                //update user
                 $this->db->where('id_user', $id_user);
                 $this->db->update('users', $data);
-        
-                if ($this->db->affected_rows()) {
-                    $this->db->select('id_user, username, nama, pekerjaan, role, alamat, no_telp, email, photo, gender, birthday, token');
+                if($this->db->affected_rows()){
+                    $this->db->select('id_user, nama, pekerjaan, role, alamat, no_telp, email, photo, gender, birthday, token, pengalaman, rating');
                     $get_users = $this->db->get_where('users', ['id_user' => $id_user])->result_array();
+                    foreach ($get_users as $key => $value) {
+                        $data[] = [
+                            'id_user' => $value['id_user'],
+                            'nama' => $value['nama'],
+                            'pekerjaan' => $value['pekerjaan'],
+                            'role' => $value['role'],
+                            'alamat' => $value['alamat'],
+                            'no_telp' => $value['no_telp'],
+                            'email' => $value['email'],
+                            'photo' => $value['photo'],
+                            'gender' => $value['gender'],
+                            'birthday' => $value['birthday'],
+                            'token' => $value['token'],
+                            'pengalaman' => $value['pengalaman'],
+                            'rating' => $value['rating']/20,
+                        ];
+                    }
                     $this->response([
                         'status' => true,
-                        'message' => 'success',
-                        'result' => $get_users,
-                    ], 200);
-                } else {
+                        'message' => 'success update users',
+                        'result' => $data,
+                    ],200);
+                }else{
                     $this->response([
                         'status' => false,
-                        'message' => 'failed',
-                    ], 404);
+                        'message' => 'failed update users'
+                    ],404);
                 }
+            }else{
+                //dilarang update user karena email sudah dimiliki orang lain
+                $this->response([
+                    'status' => false,
+                    'message' => 'email duplicated'
+                ],404);
+            }
+        }else{
+            //update user
+            $this->db->where('id_user', $id_user);
+            $this->db->update('users', $data);
+            if($this->db->affected_rows()){
+                $this->db->select('id_user, nama, pekerjaan, role, alamat, no_telp, email, photo, gender, birthday, token, pengalaman, rating');
+                $get_users = $this->db->get_where('users', ['id_user' => $id_user])->result_array();
+                foreach ($get_users as $key => $value) {
+                    $data[] = [
+                        'id_user' => $value['id_user'],
+                        'nama' => $value['nama'],
+                        'pekerjaan' => $value['pekerjaan'],
+                        'role' => $value['role'],
+                        'alamat' => $value['alamat'],
+                        'no_telp' => $value['no_telp'],
+                        'email' => $value['email'],
+                        'photo' => $value['photo'],
+                        'gender' => $value['gender'],
+                        'birthday' => $value['birthday'],
+                        'token' => $value['token'],
+                        'pengalaman' => $value['pengalaman'],
+                        'rating' => $value['rating']/20,
+                    ];
+                }
+                $this->response([
+                    'status' => true,
+                    'message' => 'success update users',
+                    'result' => $data,
+                ],200);
+            }else{
+                $this->response([
+                    'status' => false,
+                    'message' => 'failed update users'
+                ],404);
             }
         }
 
@@ -331,7 +330,6 @@ class User extends RestController
         $file = $id_user . "ID" . time() . "_" . basename($_FILES['image']['name']);
         $tmp_name = $_FILES['image']['tmp_name'];
         if (move_uploaded_file($tmp_name, "./upload/profile/" . $file)) {
-
             $get_users = $this->db->get_where('users', ['id_user' => $id_user])->result_array();
             if($get_users){
                 $photo = $get_users[0]['photo'];
@@ -342,10 +340,28 @@ class User extends RestController
             $this->db->where('id_user', $id_user);
             $this->db->update('users', ['photo' => $file, 'updated' => date('Y-m-d H:i:s')]);
             if ($this->db->affected_rows()) {
+                $get_user = $this->db->get_where('users', ['id_user'=> $id_user])->result_array();
+                foreach ($get_users as $key => $value) {
+                    $data[] = [
+                        'id_user' => $value['id_user'],
+                        'nama' => $value['nama'],
+                        'pekerjaan' => $value['pekerjaan'],
+                        'role' => $value['role'],
+                        'alamat' => $value['alamat'],
+                        'no_telp' => $value['no_telp'],
+                        'email' => $value['email'],
+                        'photo' => $value['photo'],
+                        'gender' => $value['gender'],
+                        'birthday' => $value['birthday'],
+                        'token' => $value['token'],
+                        'pengalaman' => $value['pengalaman'],
+                        'rating' => $value['rating']/20,
+                    ];
+                }
                 $this->response([
                     'status' => true,
                     'message' => 'success',
-                    'photo' => $file
+                    'result' => $data
                 ], 200);
             } else {
                 $this->response([
@@ -496,6 +512,185 @@ class User extends RestController
             $this->response([
                 'status' => false,
                 'message' => 'failed',
+            ],404);
+        }
+    }
+
+    public function cari_get(){
+        $email = $this->get('email');
+        $get_user = $this->db->get_where('users', ['email' => $email])->result_array();
+        if($get_user){
+            $this->response([
+                'status' => true,
+                'message' => 'success',
+                'result' => $get_user
+            ],200);
+        }else{
+            $this->response([
+                'status' => false,
+                'message' => 'failed',
+            ],404);
+        }
+    }
+
+    public function ganti_role_post(){
+        $email = $this->post('email');
+        $role = $this->post('role');
+        $where = [
+            'role !=' => 'admin',
+            'email' => $email,
+        ];
+        $this->db->where($where);
+        $this->db->update('users', ['role' => $role, 'updated' => date('Y-m-d H:i:s')]);
+        if($this->db->affected_rows()){
+            $this->response([
+                'status' => true,
+                'message' => 'success',
+            ],200);
+        }else{
+            $this->response([
+                'status' => false,
+                'message' => 'failed',
+            ],404);
+        }
+    }
+
+    public function new_up_post(){
+        $id_user = $this->post('id_user');
+        $token = $this->post('token');
+        $this->db->where('id_user', $id_user);
+        $this->db->update('users', ['token' => $token, 'updated' => date('Y-m-d H:i:s')]);
+        if($this->db->affected_rows()){
+            $this->db->select('id_user, nama, pekerjaan, role, alamat, no_telp, email, photo, gender, birthday, token, pengalaman, rating');
+            $get_users = $this->db->get_where('users', ['id_user' => $id_user])->result_array();
+            $this->response([
+                'status' => true,
+                'message' => 'success update status',
+                'result' => $get_users
+            ],200);
+        }else{
+            $this->response([
+                'status' => false,
+                'message' => 'failed update status',
+            ],404);
+        }
+    }
+
+    public function list_ready_get(){
+        $this->db->limit(2);
+        $this->db->order_by('updated', 'desc');
+        $this->db->where('role !=', 'Pengguna Umum');
+        $this->db->select('id_user,nama,email,gender,birthday,role,pekerjaan,pengalaman,rating,no_telp,alamat,photo,token,created,updated');
+        $get = $this->db->get('users')->result_array();
+        if($get){
+            $this->response([
+                'status' => true,
+                'message' => 'ready penyuluh/admin',
+                'result' => $get
+            ],200);
+        }else{
+            $this->response([
+                'status' => false,
+                'message' => 'failed update status',
+            ],404);
+        }
+    }
+    public function list_all_get(){
+        $this->db->order_by('updated', 'desc');
+        $this->db->where('role !=', 'Pengguna Umum');
+        $this->db->select('id_user,nama,email,gender,birthday,role,pekerjaan,pengalaman,rating,no_telp,alamat,photo,token,created,updated');
+        $get = $this->db->get('users')->result_array();
+        if($get){
+            $no = 1;
+            foreach ($get as $key => $value) {
+                $ArrDataPenggunaUmum[] = [
+                    'id' => $no++,
+                    'id_user' => $value['id_user'],
+                    'nama' => $value['nama'],
+                    'email' => $value['email'],
+                    'gender' => $value['gender'],
+                    'birthday' => $value['birthday'],
+                    'role' => $value['role'],
+                    'pekerjaan' => $value['pekerjaan'],
+                    'pengalaman' => $value['pengalaman'],
+                    'rating' => $value['rating'],
+                    'no_telp' => $value['no_telp'],
+                    'alamat' => $value['alamat'],
+                    'photo' => $value['photo'],
+                    'token' => $value['token'],
+                    'created' => $value['created'],
+                    'updated' => $value['updated'],
+                    'total_pesan' => 0,
+                    'pesan_terakhir' => '',
+                    'status' => 'Sudah Dijawab',
+                    'nama_penyuluh' => '',
+                ];
+            }
+            $this->response([
+                'status' => true,
+                'message' => 'ready penyuluh/admin',
+                'result' => $ArrDataPenggunaUmum
+            ],200);
+        }else{
+            $this->response([
+                'status' => false,
+                'message' => 'failed update status',
+            ],404);
+        }
+    }
+    public function list_pengguna_chat_get(){
+        $id_user2 = $this->get('id_user2');
+        if($id_user2){
+            $this->db->order_by('updated', 'desc');
+            $get_chat = $this->db->get_where('chat', ['id_user2' => $id_user2])->result_array();
+        }else{
+            $this->db->order_by('updated', 'desc');
+            $get_chat = $this->db->get('chat')->result_array();
+        }
+        $ArrValue = [];
+        $IDUSER1 = [];
+        if($get_chat){
+            foreach ($get_chat as $key => $value) {
+                $IDUSER1[] = $value['id_user1'];
+            }
+        }
+        $NewArrUser1 = array_values(array_unique($IDUSER1));
+        if($NewArrUser1){
+            foreach ($NewArrUser1 as $key => $value) {
+                $id_user1 = $value;
+                $this->db->order_by('updated', 'desc');
+                $this->db->where('role', 'Pengguna Umum');
+                $this->db->select('id_user,nama,email,gender,birthday,role,pekerjaan,pengalaman,rating,no_telp,alamat,photo,token,created,updated');
+                $get = $this->db->get_where('users', ['id_user' => $id_user1])->result_array();
+                $ArrValue[] = [
+                    'id_user' => $get[0]['id_user'],
+                    'nama' => $get[0]['nama'],
+                    'email' => $get[0]['email'],
+                    'gender' => $get[0]['gender'],
+                    'birthday' => $get[0]['birthday'],
+                    'role' => $get[0]['role'],
+                    'pekerjaan' => $get[0]['pekerjaan'],
+                    'pengalaman' => $get[0]['pengalaman'],
+                    'rating' => $get[0]['rating'],
+                    'no_telp' => $get[0]['no_telp'],
+                    'alamat' => $get[0]['alamat'],
+                    'photo' => $get[0]['photo'],
+                    'token' => $get[0]['token'],
+                    'created' => $get[0]['created'],
+                    'updated' => $get[0]['updated'],
+                ];
+            }
+        }
+        if($get){
+            $this->response([
+                'status' => true,
+                'message' => 'ready penyuluh/admin',
+                'result' => $ArrValue
+            ],200);
+        }else{
+            $this->response([
+                'status' => false,
+                'message' => 'failed update status',
             ],404);
         }
     }
